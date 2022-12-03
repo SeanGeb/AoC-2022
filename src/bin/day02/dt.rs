@@ -1,6 +1,6 @@
 use std::io;
 
-use aoc2022::utils::file::get_input_lines;
+use aoc2022::utils::{error::invalid_data_err, file::get_input_lines};
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum MoveType {
@@ -14,27 +14,21 @@ fn parse_movetype(c: &char) -> Result<MoveType, io::Error> {
         'A' | 'X' => Ok(MoveType::Rock),
         'B' | 'Y' => Ok(MoveType::Paper),
         'C' | 'Z' => Ok(MoveType::Scissors),
-        _ => Err(io::Error::new(
-            io::ErrorKind::InvalidData,
-            format!("unrecognised char {}", c),
-        )),
+        _ => Err(invalid_data_err(&format!("unrecognised char {}", c))),
     }
 }
 
 pub fn parse_move(m: &String) -> Result<Move, io::Error> {
     if m.len() != 3 {
-        return Err(io::Error::new(
-            io::ErrorKind::InvalidData,
-            format!("input was wrong length: got {}", m),
-        ));
+        return Err(invalid_data_err(&format!(
+            "input was wrong length: got {}",
+            m
+        )));
     }
 
     let chars: Vec<char> = m.chars().collect();
     if chars.len() != 3 {
-        return Err(io::Error::new(
-            io::ErrorKind::InvalidData,
-            format!("not three chars in {}", m),
-        ));
+        return Err(invalid_data_err(&format!("not three chars in {}", m)));
     }
 
     Ok(Move {

@@ -1,10 +1,12 @@
 use std::cmp;
 use std::collections::BinaryHeap;
-use std::fmt;
 use std::io;
-use std::num;
 
-pub fn process_lines(lines: impl Iterator<Item = Result<String, io::Error>>) -> Result<u64, Err> {
+use aoc2022::utils::error::{invalid_data_err, invalid_data_err_from};
+
+pub fn process_lines(
+    lines: impl Iterator<Item = Result<String, io::Error>>,
+) -> Result<u64, io::Error> {
     Ok(find_top_n::<3>(lines)?.iter().sum())
 }
 
@@ -12,11 +14,11 @@ pub fn process_lines(lines: impl Iterator<Item = Result<String, io::Error>>) -> 
 /// summation/resetting along the way.
 fn find_top_n<const N: usize>(
     lines: impl Iterator<Item = Result<String, io::Error>>,
-) -> Result<[u64; N], Err> {
+) -> Result<[u64; N], io::Error> {
     let mut heap = BinaryHeap::with_capacity(N + 1);
     let mut sum_this_one: u64 = 0;
 
-    let mut add_val = |line: String| -> Result<(), num::ParseIntError> {
+    let mut add_val = |line: String| -> Result<(), io::Error> {
         if line.is_empty() {
             heap.push(cmp::Reverse(sum_this_one));
             sum_this_one = 0;
@@ -25,7 +27,7 @@ fn find_top_n<const N: usize>(
                 heap.pop();
             }
         } else {
-            sum_this_one += line.parse::<u64>()?;
+            sum_this_one += line.parse::<u64>().map_err(invalid_data_err_from)?;
         }
 
         Ok(())
@@ -39,11 +41,7 @@ fn find_top_n<const N: usize>(
 
     // Raise error if too few values were provided.
     if heap.len() != N {
-        return Err(io::Error::new(
-            io::ErrorKind::InvalidData,
-            format!("too few values provided (got {}, wanted {})", heap.len(), N),
-        )
-        .into());
+        return Err(invalid_data_err("wrong number of heap items"));
     }
 
     // Empty the heap into an array.
@@ -53,40 +51,6 @@ fn find_top_n<const N: usize>(
     }
 
     Ok(res)
-}
-
-/// Err may be an io::Error or a num::ParseIntError.
-#[derive(Debug)]
-pub enum Err {
-    IOError(io::Error),
-    ParseIntError(num::ParseIntError),
-}
-
-impl fmt::Display for Err {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Err::IOError(e) => e.fmt(f),
-            Err::ParseIntError(e) => e.fmt(f),
-        }
-    }
-}
-
-impl From<io::Error> for Err {
-    fn from(e: io::Error) -> Self {
-        Err::IOError(e)
-    }
-}
-
-impl From<num::ParseIntError> for Err {
-    fn from(e: num::ParseIntError) -> Self {
-        Err::ParseIntError(e)
-    }
-}
-
-impl From<Err> for Box<dyn std::error::Error> {
-    fn from(e: Err) -> Box<dyn std::error::Error> {
-        e.into()
-    }
 }
 
 #[cfg(test)]
