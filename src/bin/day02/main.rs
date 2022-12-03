@@ -1,8 +1,8 @@
-use std::error::Error;
-
 mod dt;
 mod part1;
 mod part2;
+
+use std::error::Error;
 
 fn main() -> Result<(), Box<dyn Error>> {
     // Each line is of the form [ABC] [XYZ]. A/X beats B/Y beats C/Z beats A/X.
