@@ -26,11 +26,11 @@ pub fn process_lines(lines: Lines<BufReader<File>>) -> Result<u64, Error> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::utils::file;
+    use aoc2022::utils::file::get_input_lines;
 
     #[test]
     fn test_process_lines() {
-        let lines = file::get_input_lines("example/day01").unwrap();
+        let lines = get_input_lines("example/day01").unwrap();
         let res = process_lines(lines).unwrap();
         assert_eq!(res, 24000);
     }

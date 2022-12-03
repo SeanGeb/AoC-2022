@@ -3,6 +3,7 @@ use std::collections::BinaryHeap;
 use std::error::Error;
 use std::fs::File;
 use std::io::{BufReader, Lines};
+use std::num;
 
 pub fn process_lines(lines: Lines<BufReader<File>>) -> Result<u64, Box<dyn Error>> {
     Ok(find_top_n(lines, 3)?.iter().sum())
@@ -18,7 +19,7 @@ fn find_top_n(lines: Lines<BufReader<File>>, n: usize) -> Result<Vec<u64>, Box<d
     let mut heap = BinaryHeap::with_capacity(n);
     let mut sum_this_one: u64 = 0;
 
-    let mut add_val = |line: String| -> Result<(), std::num::ParseIntError> {
+    let mut add_val = |line: String| -> Result<(), num::ParseIntError> {
         if line.is_empty() {
             heap.push(cmp::Reverse(sum_this_one));
             sum_this_one = 0;
@@ -48,18 +49,18 @@ fn find_top_n(lines: Lines<BufReader<File>>, n: usize) -> Result<Vec<u64>, Box<d
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::utils::file;
+    use aoc2022::utils::file::get_input_lines;
 
     #[test]
     fn test_find_top_3() {
-        let lines = file::get_input_lines("example/day01").unwrap();
+        let lines = get_input_lines("example/day01").unwrap();
         let res = find_top_n(lines, 3).unwrap();
         assert_eq!(res, [24000, 11000, 10000]);
     }
 
     #[test]
     fn test_process_lines() {
-        let lines = file::get_input_lines("example/day01").unwrap();
+        let lines = get_input_lines("example/day01").unwrap();
         let res = process_lines(lines).unwrap();
         assert_eq!(res, 45000);
     }

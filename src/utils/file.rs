@@ -7,5 +7,5 @@ use std::str;
 pub fn get_input_lines(file: &str) -> Result<Lines<BufReader<File>>, io::Error> {
     let data = File::open(format!("data/{file}.txt"))?;
 
-    Ok(io::BufReader::new(data).lines())
+    Ok(BufReader::new(data).lines())
 }
