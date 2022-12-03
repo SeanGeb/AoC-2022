@@ -98,7 +98,7 @@ mod tests {
     fn test_find_top_3() {
         let lines = get_input_lines("example/day01").unwrap();
         let res = find_top_n::<3>(lines).unwrap();
-        assert_eq!(res, [24000, 11000, 10000]);
+        assert_eq!(res, [10000, 11000, 24000]);
     }
 
     #[test]
