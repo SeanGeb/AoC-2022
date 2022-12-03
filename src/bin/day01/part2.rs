@@ -1,11 +1,12 @@
 use std::cmp;
 use std::collections::BinaryHeap;
 use std::error::Error;
-use std::fs::File;
-use std::io::{BufReader, Lines};
+use std::io;
 use std::num;
 
-pub fn process_lines(lines: Lines<BufReader<File>>) -> Result<u64, Box<dyn Error>> {
+pub fn process_lines(
+    lines: impl Iterator<Item = Result<String, io::Error>>,
+) -> Result<u64, Box<dyn Error>> {
     Ok(find_top_n(lines, 3)?.iter().sum())
 }
 
@@ -14,8 +15,10 @@ pub fn process_lines(lines: Lines<BufReader<File>>) -> Result<u64, Box<dyn Error
 ///
 /// TODO:
 /// * return an iterator over the BinaryHeap using `pop`.
-/// * take an iterator of ints instead of a Lines<...>.
-fn find_top_n(lines: Lines<BufReader<File>>, n: usize) -> Result<Vec<u64>, Box<dyn Error>> {
+fn find_top_n(
+    lines: impl Iterator<Item = Result<String, io::Error>>,
+    n: usize,
+) -> Result<Vec<u64>, Box<dyn Error>> {
     let mut heap = BinaryHeap::with_capacity(n);
     let mut sum_this_one: u64 = 0;
 
@@ -35,7 +38,7 @@ fn find_top_n(lines: Lines<BufReader<File>>, n: usize) -> Result<Vec<u64>, Box<d
     };
 
     for line in lines {
-        add_val(line?)?;
+        add_val(line?)?
     }
 
     add_val("".into())?;

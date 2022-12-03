@@ -1,8 +1,9 @@
 use std::cmp;
-use std::fs::File;
-use std::io::{BufReader, Error, Lines};
+use std::io;
 
-pub fn process_lines(lines: Lines<BufReader<File>>) -> Result<u64, Error> {
+pub fn process_lines(
+    lines: impl Iterator<Item = Result<String, io::Error>>,
+) -> Result<u64, io::Error> {
     let mut max_so_far: u64 = 0;
     let mut sum_this_one: u64 = 0;
 
