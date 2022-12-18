@@ -175,32 +175,37 @@ impl fmt::Display for Dir {
     }
 }
 
-#[test]
-fn test_calc_size() {
-    use aoc2022::utils::test::catch_unwind_silent;
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-    let mut root = Dir::new();
-    root.add_file("baz".into(), 10);
-    assert_eq!(root.update_contents_size(), 10);
+    #[test]
+    fn test_calc_size() {
+        use aoc2022::utils::test::catch_unwind_silent;
 
-    let dir_a = root.add_or_get_dir("a".into());
-    dir_a.add_file("foo".into(), 123);
-    dir_a.add_file("bar".into(), 100);
-    assert_eq!(dir_a.update_contents_size(), 223);
-    assert_eq!(root.update_contents_size(), 233);
+        let mut root = Dir::new();
+        root.add_file("baz".into(), 10);
+        assert_eq!(root.update_contents_size(), 10);
 
-    let dir_b = root.add_or_get_dir("dir_b".into());
-    let dir_b_sub = dir_b.add_or_get_dir("dir_b_sub".into());
-    dir_b_sub.add_file("thonk".into(), 500);
-    assert_eq!(root.update_contents_size(), 733);
+        let dir_a = root.add_or_get_dir("a".into());
+        dir_a.add_file("foo".into(), 123);
+        dir_a.add_file("bar".into(), 100);
+        assert_eq!(dir_a.update_contents_size(), 223);
+        assert_eq!(root.update_contents_size(), 233);
 
-    let dir_b = root.cd(&["dir_b".into(), "dir_b_sub".into()]);
-    assert_eq!(dir_b.update_contents_size(), 500);
+        let dir_b = root.add_or_get_dir("dir_b".into());
+        let dir_b_sub = dir_b.add_or_get_dir("dir_b_sub".into());
+        dir_b_sub.add_file("thonk".into(), 500);
+        assert_eq!(root.update_contents_size(), 733);
 
-    println!("{root}");
+        let dir_b = root.cd(&["dir_b".into(), "dir_b_sub".into()]);
+        assert_eq!(dir_b.update_contents_size(), 500);
 
-    assert!(catch_unwind_silent(move || {
-        root.cd(&["baz".into()]);
-    })
-    .is_err());
+        println!("{root}");
+
+        assert!(catch_unwind_silent(move || {
+            root.cd(&["baz".into()]);
+        })
+        .is_err());
+    }
 }

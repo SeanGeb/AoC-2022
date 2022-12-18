@@ -60,19 +60,24 @@ pub fn parse_lines(
     })
 }
 
-#[test]
-fn test_parse_line() {
-    assert_eq!(
-        str::parse::<Token>("$ cd /").unwrap(),
-        Token::Cd("/".to_string())
-    );
-    assert_eq!(str::parse::<Token>("$ ls").unwrap(), Token::Ls);
-    assert_eq!(
-        str::parse::<Token>("dir a").unwrap(),
-        Token::Dir("a".to_string())
-    );
-    assert_eq!(
-        str::parse::<Token>("1234 bar").unwrap(),
-        Token::File(1234, "bar".to_string())
-    );
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_parse_line() {
+        assert_eq!(
+            str::parse::<Token>("$ cd /").unwrap(),
+            Token::Cd("/".to_string())
+        );
+        assert_eq!(str::parse::<Token>("$ ls").unwrap(), Token::Ls);
+        assert_eq!(
+            str::parse::<Token>("dir a").unwrap(),
+            Token::Dir("a".to_string())
+        );
+        assert_eq!(
+            str::parse::<Token>("1234 bar").unwrap(),
+            Token::File(1234, "bar".to_string())
+        );
+    }
 }

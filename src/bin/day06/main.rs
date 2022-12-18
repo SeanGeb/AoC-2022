@@ -41,22 +41,27 @@ pub fn solve<const N: usize>(input: &str) -> Option<usize> {
     None
 }
 
-#[test]
-fn test_solve() {
-    assert_eq!(solve::<4>("mjqjpqmgbljsphdztnvjfqwrcgsmlb"), Some(7));
-    assert_eq!(solve::<4>("bvwbjplbgvbhsrlpgdmjqwftvncz"), Some(5));
-    assert_eq!(solve::<4>("nppdvjthqldpwncqszvftbrmjlhg"), Some(6));
-    assert_eq!(solve::<4>("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"), Some(10));
-    assert_eq!(solve::<4>("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"), Some(11));
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-    assert_eq!(solve::<14>("mjqjpqmgbljsphdztnvjfqwrcgsmlb"), Some(19));
-    assert_eq!(solve::<14>("bvwbjplbgvbhsrlpgdmjqwftvncz"), Some(23));
-    assert_eq!(solve::<14>("nppdvjthqldpwncqszvftbrmjlhg"), Some(23));
-    assert_eq!(solve::<14>("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"), Some(29));
-    assert_eq!(solve::<14>("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"), Some(26));
+    #[test]
+    fn test_solve() {
+        assert_eq!(solve::<4>("mjqjpqmgbljsphdztnvjfqwrcgsmlb"), Some(7));
+        assert_eq!(solve::<4>("bvwbjplbgvbhsrlpgdmjqwftvncz"), Some(5));
+        assert_eq!(solve::<4>("nppdvjthqldpwncqszvftbrmjlhg"), Some(6));
+        assert_eq!(solve::<4>("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"), Some(10));
+        assert_eq!(solve::<4>("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"), Some(11));
 
-    assert_eq!(solve::<0>(""), None);
-    assert_eq!(solve::<1>(""), None);
-    assert_eq!(solve::<1>("a"), Some(1));
-    assert_eq!(solve::<2>("a"), None);
+        assert_eq!(solve::<14>("mjqjpqmgbljsphdztnvjfqwrcgsmlb"), Some(19));
+        assert_eq!(solve::<14>("bvwbjplbgvbhsrlpgdmjqwftvncz"), Some(23));
+        assert_eq!(solve::<14>("nppdvjthqldpwncqszvftbrmjlhg"), Some(23));
+        assert_eq!(solve::<14>("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"), Some(29));
+        assert_eq!(solve::<14>("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"), Some(26));
+
+        assert_eq!(solve::<0>(""), None);
+        assert_eq!(solve::<1>(""), None);
+        assert_eq!(solve::<1>("a"), Some(1));
+        assert_eq!(solve::<2>("a"), None);
+    }
 }
