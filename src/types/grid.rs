@@ -1,9 +1,20 @@
+use std::cmp::{max, min};
 use std::fmt::{self, Write};
 use std::iter::{self, repeat, repeat_with};
 
 use itertools::{unfold, Itertools};
 
+/// A Dir is a cardinal direction.
+#[derive(Debug, Eq, Hash, PartialEq)]
+pub enum Dir {
+    Up,
+    Down,
+    Left,
+    Right,
+}
+
 /// A Grid is an X by Y grid of items stored in row-major order.
+#[derive(Debug, Eq, Hash, PartialEq)]
 pub struct Grid<T>(Vec<Vec<T>>);
 
 impl<T> TryFrom<Vec<Vec<T>>> for Grid<T> {
@@ -41,6 +52,23 @@ impl<T> Grid<T> {
             iter = Box::new(iter.chain(row.iter().enumerate().map(move |(x, val)| ((x, y), val))))
         }
         iter
+    }
+
+    /// Enumerates up to four neighbours in the up/down/left/right direction
+    /// around the point given.
+    pub fn enumerate_n4(&self, (x, y): (usize, usize)) -> impl Iterator<Item = (Dir, &T)> {
+        let dirs: [((isize, isize), Dir); 4] = [
+            ((-1, 0), Dir::Left),
+            ((1, 0), Dir::Right),
+            ((0, 1), Dir::Up),
+            ((0, -1), Dir::Down),
+        ];
+        dirs.into_iter().filter_map(move |((d_x, d_y), dir)| {
+            Some((
+                dir,
+                self.get(checked_u_add_i(x, d_x)?, checked_u_add_i(y, d_y)?)?,
+            ))
+        })
     }
 
     /// Gets a ref to the item at (x, y); returns a None if those indexes are
@@ -156,6 +184,18 @@ impl<T> Grid<T> {
         self.width().checked_mul(self.height()).unwrap()
     }
 
+    /// Taxicab distance between two points in the grid. None if either point is
+    /// not in the grid.
+    pub fn taxicab_dist(&self, from: (usize, usize), to: (usize, usize)) -> Option<usize> {
+        if self.get(from.0, from.1).is_none() || self.get(to.0, to.1).is_none() {
+            return None;
+        }
+
+        let d_x = max(from.0, to.0) - min(from.0, to.0);
+        let d_y = max(from.1, to.1) - min(from.1, to.1);
+        return Some(d_x + d_y);
+    }
+
     /// Returns the width of the grid (i.e. x in 0..width is valid).
     pub fn width(&self) -> usize {
         match self.0.get(0) {
@@ -197,38 +237,106 @@ impl fmt::Display for Grid<bool> {
     }
 }
 
+fn checked_u_add_i(a: usize, b: isize) -> Option<usize> {
+    let a: isize = a.try_into().ok()?;
+    a.checked_add(b)?.try_into().ok()
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::types::digit::Digit;
+    use crate::utils::test::assert_vec_eq_multiset;
 
     use super::*;
 
     #[test]
     fn test_iters() {
-        let grid: Grid<Digit> = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]]
+        let grid: Grid<u8> = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]]
             .into_iter()
             .map(|r| r.into_iter().map(|x| x.try_into().unwrap()).collect())
-            .collect::<Vec<Vec<Digit>>>()
+            .collect::<Vec<Vec<u8>>>()
             .try_into()
             .unwrap();
 
-        println!("{grid}");
+        println!("{grid:?}");
 
-        println!("rows:");
-        grid.iter_rows()
-            .map(|row| row.for_each(|x| print!("{x:?}\t")))
-            .for_each(|()| println!(""));
-        println!("rev rows");
-        grid.iter_rev_rows()
-            .map(|row| row.for_each(|x| print!("{x:?}\t")))
-            .for_each(|()| println!(""));
-        println!("cols");
-        grid.iter_cols()
-            .map(|row| row.for_each(|x| print!("{x:?}\t")))
-            .for_each(|()| println!(""));
-        println!("rev cols");
-        grid.iter_rev_cols()
-            .map(|row| row.for_each(|x| print!("{x:?}\t")))
-            .for_each(|()| println!(""));
+        assert_eq!(
+            grid.iter_cols().flatten().collect_vec(),
+            vec![
+                ((0, 0), &1),
+                ((0, 1), &4),
+                ((0, 2), &7),
+                ((1, 0), &2),
+                ((1, 1), &5),
+                ((1, 2), &8),
+                ((2, 0), &3),
+                ((2, 1), &6),
+                ((2, 2), &9),
+            ]
+        );
+
+        assert_eq!(
+            grid.iter_rev_cols().flatten().collect_vec(),
+            vec![
+                ((0, 2), &7),
+                ((0, 1), &4),
+                ((0, 0), &1),
+                ((1, 2), &8),
+                ((1, 1), &5),
+                ((1, 0), &2),
+                ((2, 2), &9),
+                ((2, 1), &6),
+                ((2, 0), &3),
+            ]
+        );
+
+        assert_eq!(
+            grid.iter_rows().flatten().collect_vec(),
+            vec![
+                ((0, 0), &1),
+                ((1, 0), &2),
+                ((2, 0), &3),
+                ((0, 1), &4),
+                ((1, 1), &5),
+                ((2, 1), &6),
+                ((0, 2), &7),
+                ((1, 2), &8),
+                ((2, 2), &9),
+            ]
+        );
+
+        assert_eq!(
+            grid.iter_rev_rows().flatten().collect_vec(),
+            vec![
+                ((2, 0), &3),
+                ((1, 0), &2),
+                ((0, 0), &1),
+                ((2, 1), &6),
+                ((1, 1), &5),
+                ((0, 1), &4),
+                ((2, 2), &9),
+                ((1, 2), &8),
+                ((0, 2), &7),
+            ]
+        );
+
+        assert_vec_eq_multiset(
+            grid.enumerate_n4((1, 1)).collect(),
+            vec![
+                (Dir::Down, &2),
+                (Dir::Left, &4),
+                (Dir::Right, &6),
+                (Dir::Up, &8),
+            ],
+        );
+
+        assert_vec_eq_multiset(
+            grid.enumerate_n4((1, 2)).collect(),
+            vec![(Dir::Down, &5), (Dir::Left, &7), (Dir::Right, &9)],
+        );
+
+        assert_vec_eq_multiset(
+            grid.enumerate_n4((2, 2)).collect(),
+            vec![(Dir::Down, &6), (Dir::Left, &8)],
+        );
     }
 }
