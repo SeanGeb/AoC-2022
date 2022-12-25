@@ -210,5 +210,9 @@ mod tests {
     #[test]
     fn test_empty() {
         let mut iter: Parser = "abc".into();
+        assert!(!iter.is_empty());
+        iter.str("abc");
+        assert!(iter.is_empty());
+        iter.empty();
     }
 }
