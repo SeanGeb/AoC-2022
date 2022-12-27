@@ -146,6 +146,19 @@ impl<'a> Parser<'a> {
         unreachable!()
     }
 
+    /// If the next char matches the one provided, consume it, and indicate if
+    /// one was consumed.
+    pub fn optional_char(&mut self, c: char) -> bool {
+        match self.0.peek() {
+            None => false,
+            Some(x) if *x == c => {
+                assert_eq!(self.0.next().expect("peeked char went away"), c);
+                true
+            },
+            Some(_) => false,
+        }
+    }
+
     /// Consumes the given prefix.
     pub fn str(&mut self, prefix: &str) {
         for c in prefix.chars() {
@@ -157,6 +170,15 @@ impl<'a> Parser<'a> {
                 "didn't match prefix provided"
             );
         }
+    }
+
+    /// Returns the next n chars as a String
+    pub fn read_n(&mut self, n: usize) -> String {
+        let mut s = String::new();
+        for _ in 0..n {
+            s.push(self.0.next().expect("input ended early"));
+        }
+        s
     }
 
     consume_unsigned!(u8, u8);
