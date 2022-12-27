@@ -10,6 +10,7 @@ itertools = "0.10.5"
 lazy_static = "1.4.0"
 num = { version = "0.4.0", features = ["num-bigint"] }
 petgraph = { git = "https://github.com/petgraph/petgraph", rev = "6303db230a0a605512a76fdb18d2cadbc0f83e8b" }
+rayon = "1.6.1"
 regex = "1.7.0"
 scan_fmt = "0.2.6"
 
