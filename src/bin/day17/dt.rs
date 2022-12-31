@@ -112,7 +112,8 @@ impl State {
         if remove_rows_below != 0 {
             // Perform the compaction by deleting from the bottom upwards, and
             // add the number of rows deleted for later accounting.
-            self.compacted_height += self.hs.grid.drain(0..remove_rows_below).count() as u64;
+            self.compacted_height +=
+                self.hs.grid.drain(0..remove_rows_below).count() as u64;
         }
     }
 
@@ -129,7 +130,9 @@ impl State {
                 total_height: self.height() as u64,
                 rock_count,
             };
-            if let Some(cycle_hsr) = self.memo_table.insert(self.hs.clone(), hsr) {
+            if let Some(cycle_hsr) =
+                self.memo_table.insert(self.hs.clone(), hsr)
+            {
                 return (cycle_hsr, hsr);
             }
         }
@@ -150,8 +153,8 @@ impl State {
         let mut pos: (usize, usize) = (2, self.hs.grid.len() + 3);
         loop {
             let jet = jets[self.hs.iter_idx as usize];
-            self.hs.iter_idx =
-                (self.hs.iter_idx + 1) % (<usize as TryInto<u16>>::try_into(jets.len()).unwrap());
+            self.hs.iter_idx = (self.hs.iter_idx + 1)
+                % (<usize as TryInto<u16>>::try_into(jets.len()).unwrap());
 
             let next_x = match jet {
                 Jet::Left => match pos.0.checked_sub(1) {

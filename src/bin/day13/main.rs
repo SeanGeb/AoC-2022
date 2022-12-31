@@ -17,7 +17,8 @@ fn main() -> Result<(), Box<dyn Error>> {
             Some(l) => l?,
         };
         let line_1 = parse(line_1.as_str());
-        let line_2 = parse(lines.next().expect("unexpected end of input")?.as_str());
+        let line_2 =
+            parse(lines.next().expect("unexpected end of input")?.as_str());
         assert!(match lines.next() {
             Some(l) => l?.is_empty(),
             None => true,

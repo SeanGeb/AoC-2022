@@ -89,7 +89,9 @@ impl State {
         loop {
             // Parse the initial state columns.
             let line = match lines.next() {
-                None => return Err(parse_error("start state ended early").into()),
+                None => {
+                    return Err(parse_error("start state ended early").into())
+                },
                 Some(l) => l?,
             };
 
@@ -103,7 +105,11 @@ impl State {
                     .filter(|(c, _)| c != &' ')
                     .for_each(|(c, stack)| stack.push(c)),
                 Some('0'..='9') => break,
-                Some(c) => return Err(parse_error(format!("bad char {c:?}").as_str()).into()),
+                Some(c) => {
+                    return Err(
+                        parse_error(format!("bad char {c:?}").as_str()).into()
+                    )
+                },
                 None => return Err(parse_error("line too short").into()),
             };
         }
@@ -112,7 +118,10 @@ impl State {
         match lines.next() {
             Some(r) => match r?.as_str() {
                 "" => Ok::<(), Box<dyn Error>>(()),
-                l => Err(parse_error(format!("expected empty line, got {l}").as_str()).into()),
+                l => Err(parse_error(
+                    format!("expected empty line, got {l}").as_str(),
+                )
+                .into()),
             },
             None => Err(parse_error("early end of file").into()),
         }?;
@@ -158,7 +167,7 @@ impl State {
                     let val = self.stacks[from].pop().unwrap();
                     self.stacks[to].push(val);
                 }
-            }
+            },
             MoveType::Block => {
                 let mut buf: Vec<char> = vec![];
 
@@ -169,7 +178,7 @@ impl State {
                 buf.reverse();
 
                 self.stacks[to].append(&mut buf);
-            }
+            },
         }
     }
 

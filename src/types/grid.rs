@@ -46,17 +46,25 @@ impl<T: Copy> Grid<T> {
 
 impl<T> Grid<T> {
     /// Enumerates every grid element in row-major order.
-    pub fn enumerate(&self) -> Box<dyn Iterator<Item = ((usize, usize), &T)> + '_> {
-        let mut iter: Box<dyn Iterator<Item = ((usize, usize), &T)>> = Box::new(iter::empty());
+    pub fn enumerate(
+        &self,
+    ) -> Box<dyn Iterator<Item = ((usize, usize), &T)> + '_> {
+        let mut iter: Box<dyn Iterator<Item = ((usize, usize), &T)>> =
+            Box::new(iter::empty());
         for (y, row) in self.0.iter().enumerate() {
-            iter = Box::new(iter.chain(row.iter().enumerate().map(move |(x, val)| ((x, y), val))))
+            iter = Box::new(iter.chain(
+                row.iter().enumerate().map(move |(x, val)| ((x, y), val)),
+            ))
         }
         iter
     }
 
     /// Enumerates up to four neighbours in the up/down/left/right direction
     /// around the point given.
-    pub fn enumerate_n4(&self, (x, y): (usize, usize)) -> impl Iterator<Item = (Dir, &T)> {
+    pub fn enumerate_n4(
+        &self,
+        (x, y): (usize, usize),
+    ) -> impl Iterator<Item = (Dir, &T)> {
         let dirs: [((isize, isize), Dir); 4] = [
             ((-1, 0), Dir::Left),
             ((1, 0), Dir::Right),
@@ -88,11 +96,12 @@ impl<T> Grid<T> {
     }
 
     /// Returns an iterator of iterators of rows in right then down order.
-    pub fn iter_rows(&self) -> impl Iterator<Item = impl Iterator<Item = ((usize, usize), &T)>> {
-        self.0
-            .iter()
-            .enumerate()
-            .map(|(y, row)| row.iter().enumerate().map(move |(x, val)| ((x, y), val)))
+    pub fn iter_rows(
+        &self,
+    ) -> impl Iterator<Item = impl Iterator<Item = ((usize, usize), &T)>> {
+        self.0.iter().enumerate().map(|(y, row)| {
+            row.iter().enumerate().map(move |(x, val)| ((x, y), val))
+        })
     }
 
     /// Returns an iterator of iterators of rows in left then down order.
@@ -108,7 +117,9 @@ impl<T> Grid<T> {
     }
 
     /// Returns an iterator of iterators of cols in down then right order.
-    pub fn iter_cols(&self) -> impl Iterator<Item = impl Iterator<Item = ((usize, usize), &T)>> {
+    pub fn iter_cols(
+        &self,
+    ) -> impl Iterator<Item = impl Iterator<Item = ((usize, usize), &T)>> {
         unfold(
             // Initial state is a set of iters over rows, enumerated to give x
             // values, and collected to a vec.
@@ -130,9 +141,11 @@ impl<T> Grid<T> {
                 {
                     None
                 } else {
-                    Some(row_iters_nexts.into_iter().map(|(y, x_val)| match x_val {
-                        Some((x, val)) => ((x, y), val),
-                        None => unreachable!(),
+                    Some(row_iters_nexts.into_iter().map(|(y, x_val)| {
+                        match x_val {
+                            Some((x, val)) => ((x, y), val),
+                            None => unreachable!(),
+                        }
                     }))
                 }
             },
@@ -161,9 +174,11 @@ impl<T> Grid<T> {
                 {
                     None
                 } else {
-                    Some(row_iters_nexts.into_iter().map(|(y, x_val)| match x_val {
-                        Some((x, val)) => ((x, y), val),
-                        None => unreachable!(),
+                    Some(row_iters_nexts.into_iter().map(|(y, x_val)| {
+                        match x_val {
+                            Some((x, val)) => ((x, y), val),
+                            None => unreachable!(),
+                        }
                     }))
                 }
             },
@@ -171,7 +186,11 @@ impl<T> Grid<T> {
     }
 
     /// Turns an (x, y) into its position in the row-major order.
-    pub fn row_major_pos(&self, x: usize, y: usize) -> Result<usize, &'static str> {
+    pub fn row_major_pos(
+        &self,
+        x: usize,
+        y: usize,
+    ) -> Result<usize, &'static str> {
         if (0..self.width()).contains(&x) && (0..self.height()).contains(&y) {
             Ok(x.checked_add(self.width().checked_mul(y).unwrap()).unwrap())
         } else {
@@ -186,8 +205,13 @@ impl<T> Grid<T> {
 
     /// Taxicab distance between two points in the grid. None if either point is
     /// not in the grid.
-    pub fn taxicab_dist(&self, from: (usize, usize), to: (usize, usize)) -> Option<usize> {
-        if self.get(from.0, from.1).is_none() || self.get(to.0, to.1).is_none() {
+    pub fn taxicab_dist(
+        &self,
+        from: (usize, usize),
+        to: (usize, usize),
+    ) -> Option<usize> {
+        if self.get(from.0, from.1).is_none() || self.get(to.0, to.1).is_none()
+        {
             return None;
         }
 

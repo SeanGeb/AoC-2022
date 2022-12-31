@@ -13,7 +13,8 @@ impl SensorData {
     }
 
     pub fn dist_from(&self, other: &(i32, i32)) -> i32 {
-        (self.sensor_loc.0 - other.0).abs() + (self.sensor_loc.1 - other.1).abs()
+        (self.sensor_loc.0 - other.0).abs()
+            + (self.sensor_loc.1 - other.1).abs()
     }
 }
 

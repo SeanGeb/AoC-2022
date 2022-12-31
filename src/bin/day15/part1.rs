@@ -14,8 +14,8 @@ pub fn solve_part1(row: i32, sensors: &Vec<SensorData>) -> usize {
     io::stdout().flush().unwrap();
 
     for s in sensors {
-        let taxicab_dist =
-            (s.sensor_loc.0 - s.beacon_loc.0).abs() + (s.sensor_loc.1 - s.beacon_loc.1).abs();
+        let taxicab_dist = (s.sensor_loc.0 - s.beacon_loc.0).abs()
+            + (s.sensor_loc.1 - s.beacon_loc.1).abs();
         let d_y = (row - s.sensor_loc.1).abs();
         let d_x = taxicab_dist - d_y;
         for x in (s.sensor_loc.0 - d_x)..=(s.sensor_loc.0 + d_x) {

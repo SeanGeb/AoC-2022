@@ -31,7 +31,8 @@ impl TryFrom<&str> for Movement {
     type Error = &'static str;
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
-        let (d, n) = scan_fmt!(value, "{} {}", char, u32).or(Err("couldn't parse line"))?;
+        let (d, n) = scan_fmt!(value, "{} {}", char, u32)
+            .or(Err("couldn't parse line"))?;
         let dir: Direction = d.try_into()?;
         Ok(Movement(dir, n))
     }
@@ -100,8 +101,10 @@ impl State {
 
     fn update_extremums(&mut self) {
         for pos in self.rope.iter() {
-            self.max_pos = (max(self.max_pos.0, pos.0), max(self.max_pos.1, pos.1));
-            self.min_pos = (min(self.min_pos.0, pos.0), min(self.min_pos.1, pos.1));
+            self.max_pos =
+                (max(self.max_pos.0, pos.0), max(self.max_pos.1, pos.1));
+            self.min_pos =
+                (min(self.min_pos.0, pos.0), min(self.min_pos.1, pos.1));
         }
     }
 }
@@ -110,17 +113,18 @@ impl fmt::Display for State {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         for y in (self.min_pos.1..=self.max_pos.1).rev() {
             for x in self.min_pos.0..=self.max_pos.0 {
-                let mut c = match self.rope.iter().position(|pos| (x, y) == *pos) {
-                    Some(0) => 'h',
-                    Some(n) => {
-                        assert!((1..=9).contains(&n));
-                        format!("{n}").chars().next().unwrap()
-                    },
-                    None => match self.visited.contains(&(x, y)) {
-                        true => '#',
-                        false => '.',
-                    },
-                };
+                let mut c =
+                    match self.rope.iter().position(|pos| (x, y) == *pos) {
+                        Some(0) => 'h',
+                        Some(n) => {
+                            assert!((1..=9).contains(&n));
+                            format!("{n}").chars().next().unwrap()
+                        },
+                        None => match self.visited.contains(&(x, y)) {
+                            true => '#',
+                            false => '.',
+                        },
+                    };
 
                 if self.visited.contains(&(x, y)) {
                     c.make_ascii_uppercase();

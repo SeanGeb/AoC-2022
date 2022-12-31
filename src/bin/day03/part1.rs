@@ -5,7 +5,9 @@ use crate::common;
 use std::collections::HashSet;
 use std::io;
 
-pub fn solve(lines: impl Iterator<Item = Result<String, io::Error>>) -> Result<u64, io::Error> {
+pub fn solve(
+    lines: impl Iterator<Item = Result<String, io::Error>>,
+) -> Result<u64, io::Error> {
     // Summary for part1: take inputs, split in half, and find the common letter.
     lines
         .map(|line| -> Result<u64, io::Error> {

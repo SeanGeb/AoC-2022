@@ -48,17 +48,18 @@ fn bounded_dfs_helper<'a>(
 
     // Open this valve (if not open) as long as we have time. Skip the AA node.
     // We can do this greedily because we've made a fully-connected graph.
-    let copied_open = if open.contains(&from) || time_budget == 0 || from.name == "AA" {
-        None
-    } else {
-        let mut open = open.clone();
-        open.insert(from);
-        time_budget -= 1;
-        let score = from.rate * time_budget;
-        score_so_far += score;
+    let copied_open =
+        if open.contains(&from) || time_budget == 0 || from.name == "AA" {
+            None
+        } else {
+            let mut open = open.clone();
+            open.insert(from);
+            time_budget -= 1;
+            let score = from.rate * time_budget;
+            score_so_far += score;
 
-        Some(open)
-    };
+            Some(open)
+        };
 
     // If all the valves have been opened, return immediately.
     if open.len() == graph.node_count() {
@@ -85,8 +86,13 @@ fn bounded_dfs_helper<'a>(
             continue;
         }
 
-        let neighbour_best_score =
-            bounded_dfs_helper(graph, neighbour, open, score_so_far, time_budget - dist);
+        let neighbour_best_score = bounded_dfs_helper(
+            graph,
+            neighbour,
+            open,
+            score_so_far,
+            time_budget - dist,
+        );
         best_score = best_score.max(neighbour_best_score);
     }
 

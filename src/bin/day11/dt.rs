@@ -23,7 +23,9 @@ impl Op {
             Self::Square => worry_level.checked_mul(worry_level),
         };
         if x.is_none() {
-            panic!("arithmetic overflow: working with {worry_level} and {self:?}");
+            panic!(
+                "arithmetic overflow: working with {worry_level} and {self:?}"
+            );
         }
         x.unwrap() % (lcm as u128)
     }
@@ -138,20 +140,25 @@ impl State {
                 return Err(parse_err("unable to parse Operation: bad suffix"));
             };
 
-            let line = lines.next().ok_or(parse_err(r#"expected "Test""#))??;
+            let line =
+                lines.next().ok_or(parse_err(r#"expected "Test""#))??;
 
             let divisor = scan_fmt!(&line, "Test: divisible by {d}", u8)
                 .or(Err(parse_err("unable to parse Test line")))?;
 
-            let line = lines.next().ok_or(parse_err(r#"expected "If true""#))??;
+            let line =
+                lines.next().ok_or(parse_err(r#"expected "If true""#))??;
 
-            let if_true = scan_fmt!(&line, "If true: throw to monkey {d}", usize)
-                .or(Err(parse_err("unable to parse If true line")))?;
+            let if_true =
+                scan_fmt!(&line, "If true: throw to monkey {d}", usize)
+                    .or(Err(parse_err("unable to parse If true line")))?;
 
-            let line = lines.next().ok_or(parse_err(r#"expected "If false""#))??;
+            let line =
+                lines.next().ok_or(parse_err(r#"expected "If false""#))??;
 
-            let if_false = scan_fmt!(&line, "If false: throw to monkey {d}", usize)
-                .or(Err(parse_err("unable to parse If false line")))?;
+            let if_false =
+                scan_fmt!(&line, "If false: throw to monkey {d}", usize)
+                    .or(Err(parse_err("unable to parse If false line")))?;
 
             ms.push(Monkey {
                 items,
@@ -174,7 +181,9 @@ impl State {
         // Check the throw values are all in range.
         let valid_range = 0..ms.len();
         for m in ms.iter() {
-            if !valid_range.contains(&m.test.if_true) || !valid_range.contains(&m.test.if_false) {
+            if !valid_range.contains(&m.test.if_true)
+                || !valid_range.contains(&m.test.if_false)
+            {
                 return Err(parse_err(
                     "found a if true/false index that was out of range",
                 ));
@@ -200,7 +209,8 @@ impl State {
                 let this = &mut self.monkeys[i];
                 this.num_inspected += 1;
 
-                let worry_level = this.op.apply(item, self.lcm) / (self.relief_factor as u128);
+                let worry_level = this.op.apply(item, self.lcm)
+                    / (self.relief_factor as u128);
                 let throw_to = this.test.get_throw(worry_level);
                 self.monkeys[throw_to].items.push_back(worry_level);
             }

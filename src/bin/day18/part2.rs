@@ -45,7 +45,10 @@ pub fn solve_part2(voxels: &[Voxel]) -> u32 {
 
             // If this neighbour voxel is in bounds, is empty, and isn't already
             // part of the negative, it must be added to the search set.
-            if v.in_bounds(&min, &max) && !voxels.contains(&v) && negative.insert(v) {
+            if v.in_bounds(&min, &max)
+                && !voxels.contains(&v)
+                && negative.insert(v)
+            {
                 search_set.insert(v);
             }
         }

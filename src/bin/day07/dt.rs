@@ -100,7 +100,9 @@ impl Dir {
             }
         };
 
-        update_best_size(self.contents_size.expect("run update_contents_size first"));
+        update_best_size(
+            self.contents_size.expect("run update_contents_size first"),
+        );
         if let Some(best_contents_size) = self
             .contents
             .iter()
@@ -125,7 +127,9 @@ impl Dir {
                 _ => None,
             })
             .sum::<u64>()
-            + if self.contents_size.expect("call update_contents_size first") <= at_most {
+            + if self.contents_size.expect("call update_contents_size first")
+                <= at_most
+            {
                 self.contents_size.unwrap()
             } else {
                 0
@@ -138,7 +142,9 @@ impl Dir {
             f.write_str("  ".repeat(indent.into()).as_str())?;
             f.write_str(
                 match e {
-                    DirEntry::File(f) => format!("- {} (file, size={})\n", name, f.size),
+                    DirEntry::File(f) => {
+                        format!("- {} (file, size={})\n", name, f.size)
+                    },
                     DirEntry::Dir(_) => format!("- {} (dir)\n", name),
                 }
                 .as_str(),

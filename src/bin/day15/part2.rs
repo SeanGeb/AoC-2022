@@ -26,7 +26,8 @@ pub fn solve_part2(max: i32, sensors: &Vec<SensorData>) -> i64 {
                     continue;
                 }
 
-                let x_end_of_range = s.sensor_loc.0 + range - (s.sensor_loc.1 - y).abs();
+                let x_end_of_range =
+                    s.sensor_loc.0 + range - (s.sensor_loc.1 - y).abs();
                 // +1 to ensure next x value is outside this sensor's range.
                 next_x = cmp::max(next_x, x_end_of_range + 1);
             }

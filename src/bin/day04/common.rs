@@ -41,12 +41,18 @@ impl Range {
 
 pub fn parse_line(line: &str) -> Result<(Range, Range), Box<dyn Error>> {
     lazy_static! {
-        static ref PARSER: Regex = Regex::new(r"^(\d+)-(\d+),(\d+)-(\d+)$").unwrap();
+        static ref PARSER: Regex =
+            Regex::new(r"^(\d+)-(\d+),(\d+)-(\d+)$").unwrap();
     }
 
     let vals = match PARSER.captures(line) {
         Some(v) => v,
-        None => return Err(parse_error(format!("failed to match line {line}").as_str()).into()),
+        None => {
+            return Err(parse_error(
+                format!("failed to match line {line}").as_str(),
+            )
+            .into())
+        },
     };
 
     assert_eq!(vals.len(), 5, "bad num captures in line {line}");
@@ -56,7 +62,9 @@ pub fn parse_line(line: &str) -> Result<(Range, Range), Box<dyn Error>> {
         .map(|x| x.unwrap().as_str().parse::<u64>())
         .collect_tuple()
     {
-        Some((v1, v2, v3, v4)) => Ok((Range::new(v1?, v2?)?, Range::new(v3?, v4?)?)),
+        Some((v1, v2, v3, v4)) => {
+            Ok((Range::new(v1?, v2?)?, Range::new(v3?, v4?)?))
+        },
         None => Err(parse_error("???").into()),
     }
 }

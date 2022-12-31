@@ -5,7 +5,9 @@ use itertools::{self, Itertools};
 
 use crate::common;
 
-pub fn solve(lines: impl Iterator<Item = Result<String, io::Error>>) -> Result<u64, io::Error> {
+pub fn solve(
+    lines: impl Iterator<Item = Result<String, io::Error>>,
+) -> Result<u64, io::Error> {
     // Summary for part 2: pop three lines and find the common item, and score them.
     lines
         .chunks(3)

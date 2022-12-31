@@ -24,7 +24,9 @@ fn parse_line(line: &str) -> Vec<(u32, u32)> {
     r
 }
 
-fn parse_line_walls(line: &str) -> impl Iterator<Item = ((u32, u32), (u32, u32))> {
+fn parse_line_walls(
+    line: &str,
+) -> impl Iterator<Item = ((u32, u32), (u32, u32))> {
     parse_line(line).into_iter().tuple_windows()
 }
 

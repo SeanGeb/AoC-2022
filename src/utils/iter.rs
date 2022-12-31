@@ -4,7 +4,9 @@ use itertools::Itertools;
 
 /// Returns a boolean indicating if the elements of this iter are in strictly
 /// increasing order.
-pub fn is_strictly_increasing<T: Clone + PartialOrd>(iter: impl Iterator<Item = T>) -> bool {
+pub fn is_strictly_increasing<T: Clone + PartialOrd>(
+    iter: impl Iterator<Item = T>,
+) -> bool {
     iter.tuple_windows().all(|(a, b)| a < b)
 }
 
@@ -74,7 +76,8 @@ mod tests {
         );
 
         assert_eq!(
-            map_is_largest_so_far_f(vec![1, 2, 1, 3, 2, 4].into_iter(), |x| *x).collect_vec(),
+            map_is_largest_so_far_f(vec![1, 2, 1, 3, 2, 4].into_iter(), |x| *x)
+                .collect_vec(),
             vec![
                 (true, 1),
                 (true, 2),

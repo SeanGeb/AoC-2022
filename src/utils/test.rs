@@ -66,24 +66,30 @@ mod tests {
         assert_vec_eq_multiset::<u8>(vec![1, 2, 3], vec![1, 2, 3]);
         assert_vec_eq_multiset::<u8>(vec![1, 2, 2], vec![2, 1, 2]);
 
-        assert!(
-            catch_unwind_silent(|| assert_vec_eq_multiset::<u8>(vec![1, 2, 3], vec![3, 2]))
-                .is_err()
-        );
-        assert!(
-            catch_unwind_silent(|| assert_vec_eq_multiset::<u8>(vec![3, 2], vec![1, 2, 3]))
-                .is_err()
-        );
-        assert!(
-            catch_unwind_silent(|| assert_vec_eq_multiset::<u8>(vec![], vec![1, 2, 3])).is_err()
-        );
-        assert!(
-            catch_unwind_silent(|| assert_vec_eq_multiset::<u8>(vec![2, 2], vec![2, 2, 2]))
-                .is_err()
-        );
-        assert!(
-            catch_unwind_silent(|| assert_vec_eq_multiset::<u8>(vec![2, 3, 3], vec![2, 2, 3]))
-                .is_err()
-        );
+        assert!(catch_unwind_silent(|| assert_vec_eq_multiset::<u8>(
+            vec![1, 2, 3],
+            vec![3, 2]
+        ))
+        .is_err());
+        assert!(catch_unwind_silent(|| assert_vec_eq_multiset::<u8>(
+            vec![3, 2],
+            vec![1, 2, 3]
+        ))
+        .is_err());
+        assert!(catch_unwind_silent(|| assert_vec_eq_multiset::<u8>(
+            vec![],
+            vec![1, 2, 3]
+        ))
+        .is_err());
+        assert!(catch_unwind_silent(|| assert_vec_eq_multiset::<u8>(
+            vec![2, 2],
+            vec![2, 2, 2]
+        ))
+        .is_err());
+        assert!(catch_unwind_silent(|| assert_vec_eq_multiset::<u8>(
+            vec![2, 3, 3],
+            vec![2, 2, 3]
+        ))
+        .is_err());
     }
 }

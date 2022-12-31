@@ -27,7 +27,8 @@ fn find_top_n<const N: usize>(
                 heap.pop();
             }
         } else {
-            sum_this_one += line.parse::<u64>().map_err(invalid_data_err_from)?;
+            sum_this_one +=
+                line.parse::<u64>().map_err(invalid_data_err_from)?;
         }
 
         Ok(())

@@ -82,11 +82,15 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 fn update_visibility_grid<'a>(
     vis_map: &mut Grid<bool>,
-    grid_iter: impl Iterator<Item = impl Iterator<Item = ((usize, usize), &'a Digit)>>,
+    grid_iter: impl Iterator<
+        Item = impl Iterator<Item = ((usize, usize), &'a Digit)>,
+    >,
 ) {
     grid_iter.for_each(|row_iter| {
         iter::map_is_largest_so_far_f(row_iter, |((_, _), h)| *h)
             .filter(|(ok, _)| *ok)
-            .for_each(|(_, ((x, y), _))| *(vis_map.get_mut(x, y).unwrap()) = true)
+            .for_each(|(_, ((x, y), _))| {
+                *(vis_map.get_mut(x, y).unwrap()) = true
+            })
     })
 }

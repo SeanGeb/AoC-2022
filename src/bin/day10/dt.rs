@@ -101,7 +101,8 @@ impl fmt::Display for Machine {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         for (cycle, x) in self.val_by_time.iter() {
             let (cycle, x) = (cycle.to_owned(), x.to_owned());
-            let pos: i32 = ((cycle.checked_sub(1).unwrap()) % 40).try_into().unwrap();
+            let pos: i32 =
+                ((cycle.checked_sub(1).unwrap()) % 40).try_into().unwrap();
 
             f.write_char(if ((pos - 1)..=(pos + 1)).contains(&x) {
                 '#'

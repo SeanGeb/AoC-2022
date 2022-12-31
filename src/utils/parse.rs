@@ -12,7 +12,8 @@ macro_rules! consume_unsigned {
         #[doc = stringify!($Ty)]
         /// from the underlying iterator.
         pub fn $fun(&mut self) -> $Ty {
-            let mut peeked = *self.0.peek().expect("expected number (input ended early)");
+            let mut peeked =
+                *self.0.peek().expect("expected number (input ended early)");
 
             if !('0'..='9').contains(&peeked) {
                 panic!("expected a number")
@@ -20,7 +21,8 @@ macro_rules! consume_unsigned {
 
             let mut acc: $Ty = 0;
             while ('0'..='9').contains(&peeked) {
-                let digit: u8 = ((self.0.next().expect("peeked item went away") as u32)
+                let digit: u8 = ((self.0.next().expect("peeked item went away")
+                    as u32)
                     - ('0' as u32))
                     .try_into()
                     .unwrap();
@@ -49,7 +51,8 @@ macro_rules! consume_signed {
         #[doc = stringify!($Ty)]
         /// from the underlying iterator.
         pub fn $fun(&mut self) -> $Ty {
-            let mut peeked = *self.0.peek().expect("expected number (input ended early)");
+            let mut peeked =
+                *self.0.peek().expect("expected number (input ended early)");
 
             if !('0'..='9').contains(&peeked) && peeked != '-' {
                 panic!("expected a number");
@@ -57,7 +60,10 @@ macro_rules! consume_signed {
 
             let is_negative = peeked == '-';
             if is_negative {
-                assert_eq!(peeked, self.0.next().expect("peeked item went away"));
+                assert_eq!(
+                    peeked,
+                    self.0.next().expect("peeked item went away")
+                );
                 peeked = *self
                     .0
                     .peek()
@@ -71,7 +77,8 @@ macro_rules! consume_signed {
 
             let mut acc: $Ty = 0;
             while ('0'..='9').contains(&peeked) {
-                let digit: u8 = ((self.0.next().expect("peeked item went away") as u32)
+                let digit: u8 = ((self.0.next().expect("peeked item went away")
+                    as u32)
                     - ('0' as u32))
                     .try_into()
                     .unwrap();

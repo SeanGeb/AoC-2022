@@ -36,23 +36,32 @@ fn partition_dfs<'a>(
     let best_score = (0..=bitvec_max)
         .into_par_iter()
         .map(|partition_bitvec| -> u32 {
-            let nodes_human: im_rc::HashSet<GraphValve> = im_rc::HashSet::from_iter(
-                nodes
-                    .iter()
-                    .enumerate()
-                    .filter(|(i, _)| (partition_bitvec & 1 << i) == 0)
-                    .map(|(_, n)| *n),
-            );
-            let nodes_elephant: im_rc::HashSet<GraphValve> = im_rc::HashSet::from_iter(
-                nodes
-                    .iter()
-                    .enumerate()
-                    .filter(|(i, _)| (partition_bitvec & 1 << i) != 0)
-                    .map(|(_, n)| *n),
-            );
+            let nodes_human: im_rc::HashSet<GraphValve> =
+                im_rc::HashSet::from_iter(
+                    nodes
+                        .iter()
+                        .enumerate()
+                        .filter(|(i, _)| (partition_bitvec & 1 << i) == 0)
+                        .map(|(_, n)| *n),
+                );
+            let nodes_elephant: im_rc::HashSet<GraphValve> =
+                im_rc::HashSet::from_iter(
+                    nodes
+                        .iter()
+                        .enumerate()
+                        .filter(|(i, _)| (partition_bitvec & 1 << i) != 0)
+                        .map(|(_, n)| *n),
+                );
 
-            let score_human = partition_dfs_helper(graph, from, &nodes_human, 0, time_budget);
-            let score_elephant = partition_dfs_helper(graph, from, &nodes_elephant, 0, time_budget);
+            let score_human =
+                partition_dfs_helper(graph, from, &nodes_human, 0, time_budget);
+            let score_elephant = partition_dfs_helper(
+                graph,
+                from,
+                &nodes_elephant,
+                0,
+                time_budget,
+            );
 
             let progress = progress.fetch_add(1, Ordering::Relaxed);
             if progress % 256 == 0 {

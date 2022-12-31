@@ -150,7 +150,8 @@ impl HMap {
             let neighbours = idx_grid.enumerate_n4(pos).map(|(_, ni)| ni);
             for neighbour_idx in neighbours {
                 let neighbour_idx = *neighbour_idx;
-                let neighbour_node_height = grid.node_weight(neighbour_idx).unwrap().height;
+                let neighbour_node_height =
+                    grid.node_weight(neighbour_idx).unwrap().height;
 
                 if (0..=(node_height + 1)).contains(&neighbour_node_height) {
                     grid.update_edge(node_idx, neighbour_idx, ());

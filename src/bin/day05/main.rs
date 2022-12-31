@@ -26,7 +26,8 @@ pub fn solve(
     move_type: dt::MoveType,
 ) -> Result<String, Box<dyn Error>> {
     let mut state = dt::State::new_from_lines(&mut lines)?;
-    dt::Move::parse_from_lines(lines, move_type).for_each(|m| state.apply_move(&m.unwrap()));
+    dt::Move::parse_from_lines(lines, move_type)
+        .for_each(|m| state.apply_move(&m.unwrap()));
 
     Ok(state
         .get_top_of_stacks()

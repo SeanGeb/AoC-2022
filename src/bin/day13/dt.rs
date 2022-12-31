@@ -142,13 +142,17 @@ impl<T: Iterator<Item = char>> Iterator for TokenIter<T> {
                     let next_digit = match self.0.peek() {
                         None => break,
                         Some(c) => match c {
-                            '0'..='9' => (self.0.next().unwrap() as u32) - ('0' as u32),
+                            '0'..='9' => {
+                                (self.0.next().unwrap() as u32) - ('0' as u32)
+                            },
                             ',' => {
                                 self.0.next();
                                 break;
                             },
                             ']' => break,
-                            c => panic!("unexpected char '{c}' (expected digit or ,)"),
+                            c => panic!(
+                                "unexpected char '{c}' (expected digit or ,)"
+                            ),
                         },
                     };
                     n = n
@@ -201,6 +205,9 @@ mod tests {
         assert!(parse("[7,7,7,7]") > parse("[7,7,7]"));
         assert!(parse("[]") < parse("[3]"));
         assert!(parse("[[[]]]") > parse("[[]]"));
-        assert!(parse("[1,[2,[3,[4,[5,6,7]]]],8,9]") > parse("[1,[2,[3,[4,[5,6,0]]]],8,9]"));
+        assert!(
+            parse("[1,[2,[3,[4,[5,6,7]]]],8,9]")
+                > parse("[1,[2,[3,[4,[5,6,0]]]],8,9]")
+        );
     }
 }
