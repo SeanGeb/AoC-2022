@@ -74,11 +74,11 @@ pub struct Monkey {
 
 impl Monkey {
     fn fmt_indent(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "  Items: {:?}\n", self.items)?;
-        write!(f, "  Operation: {}\n", self.op)?;
-        write!(f, "  Test: divisible by {}\n", self.test.divisor)?;
-        write!(f, "    If true: throw to monkey {}\n", self.test.if_true)?;
-        write!(f, "    If false: throw to monkey {}\n", self.test.if_false)?;
+        writeln!(f, "  Items: {:?}", self.items)?;
+        writeln!(f, "  Operation: {}", self.op)?;
+        writeln!(f, "  Test: divisible by {}", self.test.divisor)?;
+        writeln!(f, "    If true: throw to monkey {}", self.test.if_true)?;
+        writeln!(f, "    If false: throw to monkey {}", self.test.if_false)?;
         Ok(())
     }
 }
@@ -109,12 +109,13 @@ impl State {
 
             let line = lines
                 .next()
-                .ok_or(parse_err(r#"expected "Starting items""#))??;
+                .ok_or_else(|| parse_err(r#"expected "Starting items""#))??;
 
             // This line should be "  Starting items: ..."
-            let items = line
-                .strip_prefix("  Starting items: ")
-                .ok_or(parse_err(r#"couldn't parse "Starting items""#))?;
+            let items =
+                line.strip_prefix("  Starting items: ").ok_or_else(|| {
+                    parse_err(r#"couldn't parse "Starting items""#)
+                })?;
 
             let items: VecDeque<u128> = items
                 .split(", ")
@@ -123,10 +124,11 @@ impl State {
 
             let line = lines
                 .next()
-                .ok_or(parse_err(r#"expected "Operation: ...""#))??;
-            let line = line
-                .strip_prefix("  Operation: new = old ")
-                .ok_or(parse_err("unable to parse Operation: bad prefix"))?;
+                .ok_or_else(|| parse_err(r#"expected "Operation: ...""#))??;
+            let line =
+                line.strip_prefix("  Operation: new = old ").ok_or_else(
+                    || parse_err("unable to parse Operation: bad prefix"),
+                )?;
 
             let op = if let Some(rhs) = line.strip_prefix("* ") {
                 if rhs == "old" {
@@ -140,21 +142,24 @@ impl State {
                 return Err(parse_err("unable to parse Operation: bad suffix"));
             };
 
-            let line =
-                lines.next().ok_or(parse_err(r#"expected "Test""#))??;
+            let line = lines
+                .next()
+                .ok_or_else(|| parse_err(r#"expected "Test""#))??;
 
             let divisor = scan_fmt!(&line, "Test: divisible by {d}", u8)
                 .or(Err(parse_err("unable to parse Test line")))?;
 
-            let line =
-                lines.next().ok_or(parse_err(r#"expected "If true""#))??;
+            let line = lines
+                .next()
+                .ok_or_else(|| parse_err(r#"expected "If true""#))??;
 
             let if_true =
                 scan_fmt!(&line, "If true: throw to monkey {d}", usize)
                     .or(Err(parse_err("unable to parse If true line")))?;
 
-            let line =
-                lines.next().ok_or(parse_err(r#"expected "If false""#))??;
+            let line = lines
+                .next()
+                .ok_or_else(|| parse_err(r#"expected "If false""#))??;
 
             let if_false =
                 scan_fmt!(&line, "If false: throw to monkey {d}", usize)
@@ -172,7 +177,7 @@ impl State {
             });
 
             if let Some(l) = lines.next() {
-                if l? != "" {
+                if l?.is_empty() {
                     return Err(parse_err("expected newline"));
                 }
             }
@@ -238,7 +243,7 @@ impl State {
 impl fmt::Display for State {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         for (n, m) in self.monkeys.iter().enumerate() {
-            write!(f, "Monkey {n}\n")?;
+            writeln!(f, "Monkey {n}")?;
             m.fmt_indent(f)?;
             f.write_char('\n')?;
         }

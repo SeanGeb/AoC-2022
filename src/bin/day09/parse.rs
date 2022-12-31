@@ -153,12 +153,11 @@ fn abuts_9(a: &(i32, i32), b: &(i32, i32)) -> bool {
 
 // Clamps a within the range [-1, 1]
 fn clamp_01(a: i32) -> i32 {
-    if a < 0 {
-        -1
-    } else if a > 0 {
-        1
-    } else {
-        0
+    use std::cmp::Ordering::*;
+    match a.cmp(&0) {
+        Less => -1,
+        Equal => 0,
+        Greater => 1,
     }
 }
 

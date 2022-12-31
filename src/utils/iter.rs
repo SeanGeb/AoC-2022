@@ -24,7 +24,7 @@ pub fn map_is_largest_so_far_f<'a, T, U: Clone + Ord + 'a>(
             let (ok, cur_largest) = match &*largest_so_far {
                 None => (true, cmp_val),
                 Some(prev_largest) => (
-                    prev_largest.to_owned() < cmp_val,
+                    *prev_largest < cmp_val,
                     max(prev_largest.to_owned(), cmp_val),
                 ),
             };

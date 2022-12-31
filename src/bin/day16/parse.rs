@@ -59,9 +59,7 @@ impl State {
             }
         }
 
-        Ok(Self {
-            valves: valves.into(),
-        })
+        Ok(Self { valves })
     }
 }
 
@@ -72,7 +70,7 @@ impl Display for State {
             for t in valve.tunnels_to.iter() {
                 write!(f, "{t} ")?;
             }
-            write!(f, "\n")?;
+            writeln!(f)?;
         }
         Ok(())
     }

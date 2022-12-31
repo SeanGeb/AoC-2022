@@ -20,9 +20,9 @@ pub fn solve_part1(s: &State) -> u32 {
     assert_eq!(aa.len(), 1);
     let aa = aa[0];
 
-    let result = bounded_dfs(&graph, aa, 30);
+    
 
-    result
+    bounded_dfs(&graph, aa, 30)
 }
 
 fn bounded_dfs<'a>(

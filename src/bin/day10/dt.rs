@@ -88,7 +88,7 @@ impl Machine {
                 Some(v) => {
                     s += v
                         .checked_mul(cycle.try_into()?)
-                        .ok_or::<&'static str>("mul out of range".into())?
+                        .ok_or("mul out of range")?
                 },
                 None => return Err("simulation didn't run long enough".into()),
             };

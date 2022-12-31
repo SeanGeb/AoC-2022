@@ -5,8 +5,7 @@ use crate::dt::*;
 pub fn solve_part2(voxels: &[Voxel]) -> u32 {
     // Work out the size of the cube in which the input shape would fit.
     let min = voxels
-        .iter()
-        .map(|v| *v)
+        .iter().copied()
         .reduce(|acc, v| Voxel {
             x: acc.x.min(v.x),
             y: acc.y.min(v.y),
@@ -15,8 +14,7 @@ pub fn solve_part2(voxels: &[Voxel]) -> u32 {
         .unwrap();
 
     let max = voxels
-        .iter()
-        .map(|v| *v)
+        .iter().copied()
         .reduce(|acc, v| Voxel {
             x: acc.x.max(v.x),
             y: acc.y.max(v.y),
@@ -29,7 +27,7 @@ pub fn solve_part2(voxels: &[Voxel]) -> u32 {
     let max = (max + (1, 1, 1)).unwrap();
 
     // Perform a search to create a "negative" or "cast" of the shape.
-    let voxels: HashSet<Voxel> = voxels.iter().map(|v| *v).collect();
+    let voxels: HashSet<Voxel> = voxels.iter().copied().collect();
 
     let mut search_set: HashSet<Voxel> = vec![min].into_iter().collect();
     let mut negative: HashSet<Voxel> = HashSet::new();

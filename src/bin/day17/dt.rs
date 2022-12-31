@@ -157,10 +157,7 @@ impl State {
                 % (<usize as TryInto<u16>>::try_into(jets.len()).unwrap());
 
             let next_x = match jet {
-                Jet::Left => match pos.0.checked_sub(1) {
-                    Some(n) => n,
-                    None => 0,
-                },
+                Jet::Left => pos.0.saturating_sub(1),
                 Jet::Right => (pos.0 + 1).clamp(0, WIDTH - 1),
             };
 

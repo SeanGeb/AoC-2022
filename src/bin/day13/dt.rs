@@ -57,7 +57,7 @@ impl Ord for MaybeVec {
             (Self::Vec(a), Self::Vec(b)) => a.cmp(b),
             (Self::One(a), Self::Vec(b)) => {
                 let a: Vec<MaybeVec> = vec![Self::One(*a)];
-                a.cmp(&b)
+                a.cmp(b)
             },
             (Self::Vec(a), Self::One(b)) => {
                 let b: Vec<MaybeVec> = vec![Self::One(*b)];

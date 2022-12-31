@@ -114,7 +114,7 @@ impl<'a> From<&'a str> for Parser<'a> {
 impl<'a> Parser<'a> {
     /// Collects the remaining unconsumed elements of the internal iterator to a
     /// String, and returns that String.
-    pub fn to_string(self) -> String {
+    pub fn remainder(self) -> String {
         self.0.collect()
     }
 
@@ -123,7 +123,7 @@ impl<'a> Parser<'a> {
         assert!(
             self.is_empty(),
             "expected empty, found {:?}",
-            self.to_string()
+            self.remainder()
         );
     }
 
@@ -233,7 +233,7 @@ mod tests {
         let mut iter: Parser = "abcdefgh".into();
         iter.str("abc");
         iter.str("def");
-        assert_eq!(iter.to_string().as_str(), "gh");
+        assert_eq!(iter.remainder().as_str(), "gh");
     }
 
     #[test]

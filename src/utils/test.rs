@@ -30,7 +30,7 @@ pub fn assert_vec_eq_multiset<T: Debug + Eq + Hash>(a: Vec<T>, b: Vec<T>) {
         a_mset
             .entry(a_item)
             .and_modify(|x| *x = x.checked_add(1).unwrap())
-            .or_insert(1.try_into().unwrap());
+            .or_insert_with(|| 1.try_into().unwrap());
     }
 
     for b_item in b.iter() {

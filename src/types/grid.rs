@@ -25,7 +25,7 @@ impl<T> TryFrom<Vec<Vec<T>>> for Grid<T> {
     /// order.
     fn try_from(value: Vec<Vec<T>>) -> Result<Self, Self::Error> {
         if value.iter().map(|v| v.len()).all_equal() {
-            Ok(Grid { 0: value })
+            Ok(Grid(value))
         } else {
             Err("inner vecs have differing lengths")
         }
@@ -217,7 +217,7 @@ impl<T> Grid<T> {
 
         let d_x = max(from.0, to.0) - min(from.0, to.0);
         let d_y = max(from.1, to.1) - min(from.1, to.1);
-        return Some(d_x + d_y);
+        Some(d_x + d_y)
     }
 
     /// Returns the width of the grid (i.e. x in 0..width is valid).

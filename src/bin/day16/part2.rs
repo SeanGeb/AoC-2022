@@ -92,7 +92,7 @@ fn partition_dfs_helper<'a>(
     };
 
     // If all valves are open, bail.
-    if partition.len() == 0 {
+    if partition.is_empty() {
         return score_so_far;
     }
 

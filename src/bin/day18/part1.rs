@@ -3,7 +3,7 @@ use std::collections::HashSet;
 use crate::dt::*;
 
 pub fn solve_part1(voxels: &[Voxel]) -> u32 {
-    let voxels: HashSet<Voxel> = voxels.iter().map(|v| *v).collect();
+    let voxels: HashSet<Voxel> = voxels.iter().copied().collect();
 
     // For each voxel, count the number of exposed faces, and sum up.
     voxels
