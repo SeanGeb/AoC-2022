@@ -15,12 +15,12 @@ macro_rules! consume_unsigned {
             let mut peeked =
                 *self.0.peek().expect("expected number (input ended early)");
 
-            if !('0'..='9').contains(&peeked) {
+            if !peeked.is_ascii_digit() {
                 panic!("expected a number")
             }
 
             let mut acc: $Ty = 0;
-            while ('0'..='9').contains(&peeked) {
+            while peeked.is_ascii_digit() {
                 let digit: u8 = ((self.0.next().expect("peeked item went away")
                     as u32)
                     - ('0' as u32))
@@ -54,7 +54,7 @@ macro_rules! consume_signed {
             let mut peeked =
                 *self.0.peek().expect("expected number (input ended early)");
 
-            if !('0'..='9').contains(&peeked) && peeked != '-' {
+            if !peeked.is_ascii_digit() && peeked != '-' {
                 panic!("expected a number");
             }
 
@@ -71,12 +71,12 @@ macro_rules! consume_signed {
             }
 
             assert!(
-                ('0'..='9').contains(&peeked),
+                peeked.is_ascii_digit(),
                 "consumed a '-' not followed by a digit"
             );
 
             let mut acc: $Ty = 0;
-            while ('0'..='9').contains(&peeked) {
+            while peeked.is_ascii_digit() {
                 let digit: u8 = ((self.0.next().expect("peeked item went away")
                     as u32)
                     - ('0' as u32))

@@ -27,7 +27,7 @@ impl TryFrom<char> for Digit {
     type Error = &'static str;
 
     fn try_from(value: char) -> Result<Self, Self::Error> {
-        if ('0'..='9').contains(&value) {
+        if value.is_ascii_digit() {
             let d: u8 = ((value as u32) - ('0' as u32)).try_into().unwrap();
             Ok(d.try_into().unwrap())
         } else {

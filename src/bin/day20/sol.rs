@@ -6,7 +6,7 @@ struct TaggedI16 {
     tag: bool,
 }
 
-pub fn perform_mix(v: &Vec<i16>) -> Vec<i16> {
+pub fn perform_mix(v: &[i16]) -> Vec<i16> {
     // Tag each item in the list with a flag indicating if it's been processed
     // yet.
     let mut v: Vec<TaggedI16> = v
@@ -95,7 +95,7 @@ pub fn score_i64(res: &Vec<TaggedI64>) -> [i64; 3] {
     ]
 }
 
-pub fn mix_and_score(v: &Vec<i16>) -> [i16; 3] {
+pub fn mix_and_score(v: &[i16]) -> [i16; 3] {
     let res = perform_mix(v);
     score_i16(&res)
 }
